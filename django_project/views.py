@@ -32,6 +32,10 @@ def sse_notifications_view(request):
                             yield f"event: newBoard\ndata: {json.dumps(message)}\n\n"
                         elif event_type == "board_updated":
                             yield f"event: boardUpdated\ndata: {json.dumps(message)}\n\n"
+                        elif event_type == "paths_created":
+                            yield f"event: newPaths\ndata: {json.dumps(message)}\n\n"
+                        elif event_type == "paths_updated":
+                            yield f"event: pathsUpdated\ndata: {json.dumps(message)}\n\n"
                         else:
                             yield f"event: message\ndata: {json.dumps(message)}\n\n"
                 else:

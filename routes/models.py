@@ -80,3 +80,21 @@ class GamePath(models.Model):
         
     def __str__(self):
         return f"Paths by {self.user.username} on {self.board.title}"
+    
+# Add this signal for GamePath
+@receiver(post_save, sender=GamePath)
+def gamepath_post_save(sender, instance, created, **kwargs):
+    if created:
+        push_notification({
+            "type": "paths_created",
+            "user": instance.user.username,
+            "board_id": instance.board.id,
+            "paths_data": instance.paths_data
+        })
+    else:
+        push_notification({
+            "type": "paths_updated",
+            "user": instance.user.username,
+            "board_id": instance.board.id,
+            "paths_data": instance.paths_data
+        })

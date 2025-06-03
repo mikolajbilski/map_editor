@@ -12,6 +12,12 @@ class SSEClient {
             this.eventSource.addEventListener('boardUpdated', (event) => {
                 console.log('Board updated:', event.data);
             });
+            this.eventSource.addEventListener('newPaths', (event) => {
+                console.log('New paths created:', event.data);
+            });
+            this.eventSource.addEventListener('pathsUpdated', (event) => {
+                console.log('Paths updated:', event.data);
+            });
             this.eventSource.addEventListener('heartbeat', (event) => {
                 // Optionally log or ignore heartbeats
                 // console.log('Heartbeat:', event.data);
