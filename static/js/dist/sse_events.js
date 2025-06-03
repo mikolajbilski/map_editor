@@ -3,7 +3,6 @@
 function showToast(message, duration = 3000) {
     let toast = document.createElement('div');
     toast.className = 'simple-toast';
-    // Allow HTML for links
     toast.innerHTML = message;
     Object.assign(toast.style, {
         position: 'fixed',
@@ -14,7 +13,7 @@ function showToast(message, duration = 3000) {
         color: '#fff',
         padding: '12px 24px',
         borderRadius: '6px',
-        zIndex: '2147483647', // Increased z-index to ensure toast is always on top
+        zIndex: '2147483647',
         fontSize: '16px',
         opacity: '0.95',
         boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
@@ -27,7 +26,6 @@ function showToast(message, duration = 3000) {
         setTimeout(() => toast.remove(), 300);
     }, duration);
 }
-// Helper to escape HTML
 function escapeHtml(text) {
     return text.replace(/[&<>"']/g, function (m) {
         return {
@@ -39,7 +37,6 @@ function escapeHtml(text) {
         }[m];
     });
 }
-// Connect to the Django SSE endpoint and handle events
 class SSEClient {
     constructor(url) {
         this.eventSource = null;
@@ -102,18 +99,13 @@ class SSEClient {
                 }
             });
             this.eventSource.addEventListener('heartbeat', (event) => {
-                // Optionally show heartbeat
-                // showToast('Heartbeat: ' + event.data, 1500);
             });
-            // Fallback for generic messages (should rarely be used now)
             this.eventSource.onmessage = (event) => {
                 showToast('SSE message: ' + event.data);
             };
             this.eventSource.onerror = (event) => {
                 showToast('SSE connection error', 4000);
             };
-            // You can add more event listeners here if you emit custom events
-            // this.eventSource.addEventListener('custom', (event) => { ... });
         }
         else {
             showToast('EventSource not supported in this browser.', 4000);

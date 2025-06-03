@@ -27,7 +27,6 @@ def sse_notifications_view(request):
                 if messages:
                     for message in messages:
                         event_type = message.get("type", "message")
-                        # Use event: newBoard for board_created, event: boardUpdated for board_updated, etc.
                         if event_type == "board_created":
                             yield f"event: newBoard\ndata: {json.dumps(message)}\n\n"
                         elif event_type == "board_updated":
@@ -39,10 +38,9 @@ def sse_notifications_view(request):
                         else:
                             yield f"event: message\ndata: {json.dumps(message)}\n\n"
                 else:
-                    # Heartbeat as a custom event
                     yield f"event: heartbeat\ndata: {json.dumps({'type': 'heartbeat', 'msg': 'still alive'})}\n\n"
 
-                sleep(1)  # Poll interval reduced to 1 second
+                sleep(1)
         except Exception as e:
             import sys
             print(f"SSE event_stream interrupted: {e}", file=sys.stderr)

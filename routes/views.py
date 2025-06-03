@@ -93,7 +93,6 @@ def connect_dots_create(request):
             )
             board.save()
             print(f"Created board with ID: {board.id}")
-            # Notification is now handled by post_save signal
             return JsonResponse({'success': True, 'id': board.id})
         except Exception as e:
             print(f"Error saving board: {str(e)}")
