@@ -11,6 +11,9 @@ router.register(r'routes', api_views.RouteViewSet, basename='api-route')
 
 # URL patterns for regular views
 urlpatterns = [
+    # Home page at root
+    path('', views.home, name='home'),
+
     # Existing routes
     path('routes/', views.user_routes, name='user_routes'),
     path('routes/choose_background/', views.choose_background, name='choose_background'),

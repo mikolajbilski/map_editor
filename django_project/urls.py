@@ -30,11 +30,8 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     
-    # Make sure this includes all routes including our new connect_dots urls
+    # All routes at root, including home
     path("", include("routes.urls")),
-    
-    # Root URL
-    path("", routes_views.home, name="home"),
     
     # API documentation with Swagger/ReDoc
     re_path(r'^api/docs(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

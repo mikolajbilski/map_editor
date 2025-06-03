@@ -30,7 +30,10 @@ def sse_notifications_view(request):
                 else:
                     yield ": keep-alive\n\n"
 
-                sleep(5)  # Poll interval
+                sleep(1)  # Poll interval reduced to 1 second
+        except Exception as e:
+            import sys
+            print(f"SSE event_stream interrupted: {e}", file=sys.stderr)
         finally:
             unregister_client(client)
 
