@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Connect Dots - Play{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Available Connect Dots Boards</h1>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Play Boards</li>
+        </ol>
+    </nav>
+    
+    {% if boards %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for board in boards %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        {{ board.title }}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ board.rows }} x {{ board.cols }} grid</h5>
+                        <p class="card-text">Created by: {{ board.user.username }}</p>
+                        <p class="card-text">Dots: {{ board.dots|length }} ({{ board.dots|length|divisibleby:2|yesno:"pairs,incomplete" }})</p>
+                        <p class="card-text"><small class="text-muted">Last updated: {{ board.updated|date:"F j, Y, g:i a" }}</small></p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'draw_path' board.id %}" class="btn btn-primary w-100">Play</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <p>No boards available yet. Create a board first!</p>
+            <a href="{% url 'connect_dots_create' %}" class="btn btn-primary">Create Board</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}API Token{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">API Token Management</h3>
+      </div>
+      <div class="card-body">
+        {% if messages %}
+          <div class="messages">
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        {% if token %}
+          <div class="alert alert-success">
+            <h4 class="alert-heading">Your API Token</h4>
+            <p>Use this token to authenticate API requests. Keep it secure!</p>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" value="{{ token }}" id="token-input" readonly>
+              <button class="btn btn-outline-secondary" type="button" id="copy-button" onclick="copyToken()">Copy</button>
+            </div>
+            <hr>
+            <h5>Example Usage with cURL:</h5>
+            <pre class="bg-light p-3 border rounded">
+curl -H "Authorization: Token {{ token }}" https://yourdomain.com/routes/api/routes/</pre>
+          </div>
+          
+          <div class="alert alert-warning">
+            <strong>Important:</strong> This token gives full access to your account's API. Never share it publicly or include it in client-side code.
+          </div>
+        {% else %}
+          <p class="lead">To generate or view your API token, please confirm your password:</p>
+          <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              {{ form.password.label_tag }}
+              {{ form.password }}
+              {% if form.password.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.password.errors }}
+                </div>
+              {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Generate/View Token</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="card mt-4">
+      <div class="card-header">
+        <h3 class="card-title">API Documentation</h3>
+      </div>
+      <div class="card-body">
+        <p>Check out our API documentation to learn how to use the REST API:</p>
+        <div class="d-grid gap-2">
+          <a href="{% url 'schema-swagger-ui' %}" class="btn btn-info">Swagger Documentation</a>
+          <a href="{% url 'schema-redoc' %}" class="btn btn-outline-info">ReDoc Documentation</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function copyToken() {
+    var tokenInput = document.getElementById('token-input');
+    tokenInput.select();
+    document.execCommand('copy');
+    
+    var copyButton = document.getElementById('copy-button');
+    var originalText = copyButton.innerText;
+    copyButton.innerText = 'Copied!';
+    
+    setTimeout(function() {
+      copyButton.innerText = originalText;
+    }, 2000);
+  }
+</script>
+{% endblock %}

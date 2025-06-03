@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if board %}Edit{% else %}Create{% endif %} Connect Dots Board{% endblock %}
+
+{% block extra_css %}
+<style>
+    .color-picker {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .color-option {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+    
+    .color-option.active {
+        border-color: black;
+    }
+    
+    #grid-container {
+        display: inline-block;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+        margin-top: 20px;
+        padding: 10px;
+    }
+    
+    .board-grid {
+        display: grid;
+        gap: 2px;
+    }
+    
+    .grid-cell {
+        width: 40px;
+        height: 40px;
+        background-color: white;
+        border: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+    
+    .grid-cell:hover {
+        background-color: #f0f0f0;
+    }
+    
+    .dot {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+    
+    .instructions {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">{% if board %}Edit{% else %}Create{% endif %} Connect Dots Board</h1>
+    
+    <div class="instructions">
+        <p class="mb-0"><strong>Instructions:</strong> Define the board size, then place pairs of dots by selecting a color and clicking on empty cells.</p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Board Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form id="board-form">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="board-title" class="form-label">Board Title:</label>
+                            <input type="text" id="board-title" class="form-control" value="{% if board %}{{ board.title }}{% endif %}" required>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="board-rows" class="form-label">Rows:</label>
+                                <input type="number" id="board-rows" class="form-control" min="2" max="15" value="{% if board %}{{ board.rows }}{% else %}5{% endif %}" required>
+                            </div>
+                            <div class="col">
+                                <label for="board-cols" class="form-label">Columns:</label>
+                                <input type="number" id="board-cols" class="form-control" min="2" max="15" value="{% if board %}{{ board.cols }}{% else %}5{% endif %}" required>
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="button" id="generate-grid" class="btn btn-success">Generate Grid</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Color Selection</h5>
+                </div>
+                <div class="card-body">
+                    <div class="color-picker" id="color-picker"></div>
+                    <div id="color-status" class="mt-2"></div>
+                    <button type="button" id="clear-dots" class="btn btn-warning w-100 mt-3">Clear All Dots</button>
+                </div>
+            </div>
+            
+            <div class="d-grid">
+                <button type="button" id="save-board" class="btn btn-primary btn-lg">Save Board</button>
+                <a href="{% url 'connect_dots' %}" class="btn btn-secondary mt-2">Cancel</a>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div id="grid-container" class="text-center">
+                <div id="board-grid" class="board-grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if board %}
+<script>
+    // Make sure we're properly JSON-encoding the data
+    const initialBoard = {
+        id: {{ board.id }},
+        title: "{{ board.title|escapejs }}",
+        rows: {{ board.rows }},
+        cols: {{ board.cols }},
+        dots: {{ board.dots|safe }}
+    };
+</script>
+{% else %}
+<script>
+    const initialBoard = null;
+</script>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dist/connect_dots.js' %}"></script>
+{% endblock %}

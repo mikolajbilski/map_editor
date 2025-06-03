@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Draw Path - {{ board.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    #grid-container {
+        display: inline-block;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+        margin-top: 20px;
+        padding: 10px;
+    }
+    
+    .board-grid {
+        display: grid;
+        gap: 2px;
+        user-select: none; /* Prevent text selection during dragging */
+    }
+    
+    .grid-cell {
+        width: 40px;
+        height: 40px;
+        background-color: white;
+        border: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+    }
+    
+    .grid-cell:hover {
+        background-color: #f0f0f0;
+    }
+    
+    .dot {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        z-index: 10;
+    }
+    
+    .path-segment {
+        position: absolute;
+        border-radius: 4px;
+        z-index: 5;
+    }
+    
+    .path-preview {
+        position: absolute;
+        border-radius: 4px;
+        z-index: 6;
+    }
+    
+    .instructions {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Draw Path - {{ board.title }}</h1>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'board_list_play' %}">Play Boards</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ board.title }}</li>
+        </ol>
+    </nav>
+    
+    <div class="instructions">
+        <p class="mb-0"><strong>Instructions:</strong> Click on a colored dot and drag to connect it to the matching dot of the same color. Release the mouse button to cancel the path if needed.</p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-9">
+            <div id="grid-container" class="text-center">
+                <div id="board-grid" class="board-grid"></div>
+            </div>
+            <div id="status-message" class="mt-3"></div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Path Controls</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="button" id="save-path" class="btn btn-success">Save Paths</button>
+                        <button type="button" id="clear-path" class="btn btn-warning">Clear Paths</button>
+                        <a href="{% url 'board_list_play' %}" class="btn btn-secondary">Back to Board List</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">Board Info</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Size:</strong> {{ board.rows }} x {{ board.cols }}</p>
+                    <p><strong>Created by:</strong> {{ board.user.username }}</p>
+                    <p><strong>Number of dots:</strong> {{ board.dots|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Send board and path data to JavaScript
+    const boardData = {
+        id: {{ board.id }},
+        title: "{{ board.title|escapejs }}",
+        rows: {{ board.rows }},
+        cols: {{ board.cols }},
+        dots: {{ board.dots|safe }}
+    };
+    
+    const initialPaths = {{ paths|default:"{}" |safe }};
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dist/draw_path.js' %}"></script>
+{% endblock %}

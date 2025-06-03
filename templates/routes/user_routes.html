@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}My Routes{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">My Routes</h1>
+    {% if routes %}
+        <ul class="list-group">
+            {% for route in routes %}
+                <li class="list-group-item">
+                    <strong>{{ route.name }}</strong> - Created on {{ route.created|date:"F j, Y" }}
+                    <a href="{% url 'edit_route' route.id %}" class="btn btn-sm btn-primary float-end">Edit</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">You have no routes yet. <a href="{% url 'choose_background' %}">Create one now!</a></p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Choose Background{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h1 class="mb-4">Choose background image</h1>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for bg in backgrounds %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="{{ bg.image.url }}" class="card-img-top" alt="{{ bg.title }}" style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h5 class="card-title">{{ bg.title }}</h5>
+            <a href="{% url 'create_route' bg.id %}" class="btn btn-primary">Use this background</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info">
+          No background images available. Contact the administrator.
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

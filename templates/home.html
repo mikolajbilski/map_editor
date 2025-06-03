@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron mt-4">
+        <h1 class="display-4">Welcome to Map Editor!</h1>
+        <p class="lead">Create and edit routes on custom backgrounds or play Connect Dots</p>
+        
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Route Editor</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Create and edit routes on your custom background images.</p>
+                        <div class="d-grid">
+                            <a href="{% url 'user_routes' %}" class="btn btn-primary">Go to Route Editor</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">Connect Dots Editor</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Create puzzle boards with pairs of colored dots to connect.</p>
+                        <div class="d-grid">
+                            <a href="{% url 'connect_dots' %}" class="btn btn-success">Create Boards</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">Play Connect Dots</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Draw paths on Connect Dots boards created by you and other users.</p>
+                        <div class="d-grid">
+                            <a href="{% url 'board_list_play' %}" class="btn btn-info">Play Connect Dots</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
