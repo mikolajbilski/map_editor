@@ -4,6 +4,7 @@ from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 from routes import views as routes_views
+from .views import sse_view
 
 # Import APIs if using DRF
 from rest_framework import permissions
@@ -43,6 +44,10 @@ urlpatterns = [
 
 # Always serve media files regardless of DEBUG setting
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    path('events/', sse_view),
+]
 
 # Custom 404 handler
 handler404 = 'django_project.views.custom_404'
