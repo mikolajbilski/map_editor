@@ -52,14 +52,22 @@ def gameboard_post_save(sender, instance, created, **kwargs):
             "type": "board_created",
             "user": instance.user.username,
             "board_id": instance.id,
-            "title": instance.title
+            "title": instance.title,
+            "rows": instance.rows,
+            "cols": instance.cols,
+            "dots": instance.dots,
+            "updated": instance.updated.isoformat()
         })
     else:
         push_notification({
             "type": "board_updated",
             "user": instance.user.username,
             "board_id": instance.id,
-            "title": instance.title
+            "title": instance.title,
+            "rows": instance.rows,
+            "cols": instance.cols,
+            "dots": instance.dots,
+            "updated": instance.updated.isoformat()
         })
 
 class GamePath(models.Model):
