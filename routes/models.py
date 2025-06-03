@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django_project.sse_engine import push_notification
 
 # Create your models here.
 class BackgroundImage(models.Model):
@@ -41,6 +44,23 @@ class GameBoard(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.rows}x{self.cols})"
+
+@receiver(post_save, sender=GameBoard)
+def gameboard_post_save(sender, instance, created, **kwargs):
+    if created:
+        push_notification({
+            "type": "board_created",
+            "user": instance.user.username,
+            "board_id": instance.id,
+            "title": instance.title
+        })
+    else:
+        push_notification({
+            "type": "board_updated",
+            "user": instance.user.username,
+            "board_id": instance.id,
+            "title": instance.title
+        })
 
 class GamePath(models.Model):
     """

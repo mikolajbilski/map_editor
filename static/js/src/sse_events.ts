@@ -7,8 +7,22 @@ class SSEClient {
         if (!!window.EventSource) {
             this.eventSource = new EventSource(url);
 
+            // Listen for custom events
+            this.eventSource.addEventListener('newBoard', (event: MessageEvent) => {
+                console.log('New board created:', event.data);
+            });
+
+            this.eventSource.addEventListener('boardUpdated', (event: MessageEvent) => {
+                console.log('Board updated:', event.data);
+            });
+
+            this.eventSource.addEventListener('heartbeat', (event: MessageEvent) => {
+                // Optionally log or ignore heartbeats
+                // console.log('Heartbeat:', event.data);
+            });
+
+            // Fallback for generic messages (should rarely be used now)
             this.eventSource.onmessage = (event) => {
-                // Handle generic messages (if any)
                 console.log('SSE message:', event.data);
             };
 

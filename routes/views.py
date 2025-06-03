@@ -6,6 +6,8 @@ from django.http import HttpResponse, JsonResponse
 import json
 from .models import GameBoard, GamePath
 
+from django_project.sse_engine import push_notification
+
 
 def home(request):
     """
@@ -91,6 +93,7 @@ def connect_dots_create(request):
             )
             board.save()
             print(f"Created board with ID: {board.id}")
+            # Notification is now handled by post_save signal
             return JsonResponse({'success': True, 'id': board.id})
         except Exception as e:
             print(f"Error saving board: {str(e)}")
@@ -111,6 +114,7 @@ def connect_dots_edit(request, board_id):
             board.cols = data.get('cols', board.cols)
             board.dots = data.get('dots', board.dots)
             board.save()
+            # Notification is now handled by post_save signal
             return JsonResponse({'success': True})
         except Exception as e:
             print(f"Error updating board: {str(e)}")  # Debug print
