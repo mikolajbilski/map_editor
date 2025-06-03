@@ -27,7 +27,10 @@ class SSEClient {
 }
 // Initialize SSE client on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Only connect if on a page where SSE is needed, or always if you want
-    new SSEClient('/events/');
+    // Only connect if user is authenticated
+    // @ts-ignore
+    if (window.USER_IS_AUTHENTICATED) {
+        new SSEClient('/events/');
+    }
 });
 //# sourceMappingURL=sse_events.js.map
